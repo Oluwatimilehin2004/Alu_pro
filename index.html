@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALU_PRO_V22_OFFICIAL</title>
+    <title>ALU_PRO_V22_OFFICIAL_FIXED</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #00ff00; --bg: #0d1117; }
@@ -123,11 +123,17 @@
         });
 
         let displayLabel = "";
-        // ၀.၅ bar အထက်ဆိုမှ bar နဲ့ပြ၊ အောက်ဆိုရင် ပေ (ft) နဲ့ပြ
         if (totalBarsRaw >= 0.5) {
-            let roundedBars = (totalBarsRaw % 1 > 0 && totalBarsRaw % 1 <= 0.5) 
-                              ? Math.floor(totalBarsRaw) + 0.5 
-                              : Math.ceil(totalBarsRaw);
+            let remainder = totalBarsRaw % 1;
+            let roundedBars = 0;
+            // Rounding logic fixed for integer values
+            if (Math.abs(remainder) < 0.0001) {
+                roundedBars = Math.round(totalBarsRaw);
+            } else if (remainder <= 0.5) {
+                roundedBars = Math.floor(totalBarsRaw) + 0.5;
+            } else {
+                roundedBars = Math.ceil(totalBarsRaw);
+            }
             displayLabel = roundedBars + " bar";
         } else {
             displayLabel = totalFt.toFixed(1) + " ft";
