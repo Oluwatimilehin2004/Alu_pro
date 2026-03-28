@@ -3,259 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>alu glass pro v22</title>
+    <title>ALU_PRO_V22.EXE</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Courier New', Courier, monospace; box-sizing: border-box; font-weight: 900 !important; text-transform: lowercase; color: #ffffff; }
-        body { background: radial-gradient(circle at 20% 20%, #2b354e, #0d1117); margin: 0; padding: 15px; min-height: 100vh; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 550px; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 15px 15px 40px rgba(0,0,0,0.5); }
-        h2 { text-align: center; margin-bottom: 20px; font-size: 18px; letter-spacing: 2px; }
-        .input-row { display: grid; grid-template-columns: 1fr 1fr 0.8fr 40px; gap: 10px; margin-bottom: 10px; align-items: end; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
-        label { display: block; margin-bottom: 5px; color: rgba(255,255,255,0.4); font-size: 11px; }
-        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); background: #0d1117; font-size: 16px; outline: none; }
-        .btn { padding: 15px; border-radius: 15px; border: none; cursor: pointer; width: 100%; margin-top: 10px; transition: 0.2s; }
-        .btn-main { background: #ffffff; color: #000; }
-        .btn-sec { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); }
+        :root { --accent: #00ff00; --bg: #0d1117; }
+        * { font-family: 'JetBrains Mono', monospace; box-sizing: border-box; text-transform: lowercase; color: #ffffff; }
+        body { background-color: var(--bg); margin: 0; padding: 12px; }
+        .container { width: 100%; max-width: 650px; margin: auto; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        h2 { text-align: center; font-weight: 700; letter-spacing: 2px; }
         
-        .add-btn { background: #0047AB; color: #fff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; margin-bottom: 15px; }
-        .del-btn { background: #ff4d4d; color: #fff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr 0.8fr 1.2fr 45px; gap: 8px; margin-bottom: 15px; align-items: end; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; }
+        label { display: block; margin-bottom: 6px; color: rgba(255,255,255,0.4); font-size: 11px; }
+        input { width: 100%; height: 45px; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: #000; font-size: 15px; outline: none; text-align: center; }
         
-        table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        th, td { padding: 10px 5px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 11px; }
-        th { color: rgba(255,255,255,0.4); }
-        .total-row { background: rgba(255,255,255,0.05); }
-        .sqft-row td { color: #00ff00; }
-        .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .type-picker { background: #000; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
+        .type-menu { display: none; position: absolute; top: 50px; left: 0; width: 100%; background: #1a222c; border: 1px solid #444; border-radius: 6px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
+        .type-menu.show { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 6px; }
+        .type-option { padding: 8px; border: 1px solid #333; border-radius: 4px; text-align: center; background: #000; height: 45px; display: flex; align-items: center; justify-content: center; }
+        .type-option svg, .selected-display svg { width: 35px; height: 25px; }
 
-        /* Loading Spinner */
-        #loader { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; }
-        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.1); border-top-color: #0047AB; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Typewriter Animation for Table Rows */
-        .type-row { opacity: 0; animation: fadeIn 0.3s forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media print {
-            body { background: #ffffff; }
-            * { color: #000000 !important; text-shadow: none !important; }
-            .glass-card { background: #ffffff; backdrop-filter: none; border: 1px solid #000; box-shadow: none; }
-            .btn, .add-btn, .del-btn, h2:first-of-type, .btn-sec:first-of-type, #loader { display: none !important; }
-            .sqft-row td { color: #000000 !important; font-weight: bold !important; }
-            .type-row { opacity: 1 !important; }
-        }
+        .btn { padding: 16px; border-radius: 12px; border: none; cursor: pointer; width: 100%; font-weight: bold; font-size: 15px; }
+        .btn-main { background: #fff; color: #000; margin-top: 15px; }
+        .btn-sec { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; }
+        .add-btn { background: #0047AB; color: #fff; width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; }
+        .del-btn { background: #b32d2d; color: #fff; width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 11px; color: rgba(255,255,255,0.4); padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.1); }
+        td { padding: 12px 4px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .num-cell { text-align: right; font-variant-numeric: tabular-nums; }
+        .total-row td { border-top: 2px solid rgba(255,255,255,0.2); font-weight: 700; font-size: 16px; padding-top: 18px; }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div></div>
-
 <div id="mainPage" class="container">
-    <h2>alu multi pro v22</h2>
-    <button class="btn btn-sec" style="margin-bottom: 20px;" onclick="showPage('settingPage')">settings</button>
-    
+    <h2>ALU_PRO_V22.EXE</h2>
+    <button class="btn btn-sec" onclick="showPage('settingPage')">SETTINGS</button>
     <div class="glass-card">
         <div id="windowInputs"></div>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 12px; align-items: center; margin-top: 12px;">
             <div class="add-btn" onclick="addWindow()">+</div>
-            <button class="btn btn-sec" style="width: auto; margin-top: 0; padding: 0 15px;" onclick="clearAll()">clear all</button>
+            <button class="btn btn-sec" style="width: auto; margin:0; padding: 10px 20px;" onclick="clearAll()">clear</button>
         </div>
-        <button class="btn btn-main" onclick="calculate()">calculate all</button>
+        <button class="btn btn-main" onclick="calculate()">run_calculation</button>
     </div>
 </div>
 
 <div id="resultPage" class="container" style="display:none;">
-    <h2>estimation results</h2>
-    <button class="btn btn-sec" style="margin-bottom: 20px;" onclick="showPage('mainPage')">← edit input</button>
-    
+    <h2>OUTPUT_REPORT</h2>
+    <button class="btn btn-sec" onclick="showPage('mainPage')">< return</button>
     <div id="resultArea"></div>
-    
-    <div id="exportBtns" class="price-grid">
-        <button class="btn btn-sec" style="margin-top:20px;" onclick="window.print()">pdf</button>
-        <button class="btn btn-sec" style="margin-top:20px;" onclick="exportExcel()">excel</button>
-    </div>
+    <button class="btn btn-sec" onclick="window.print()">print pdf</button>
 </div>
 
 <div id="settingPage" class="container" style="display:none;">
-    <h2>price settings</h2>
-    <div class="glass-card price-grid" id="priceInputs"></div>
-    <button class="btn btn-main" onclick="savePrices()">save settings</button>
+    <h2>PRICE_DATABASE</h2>
+    <div class="glass-card" id="priceInputs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
+    <button class="btn btn-main" onclick="savePrices()">save_to_db</button>
 </div>
 
 <script>
     const labels = ["top frame", "btm frame", "side frame", "lock frame", "hook frame", "wheel frame", "top cap", "btm cap", "wheel", "hook lock", "weatherstrip", "glass (4x6)", "sqft labor"];
     const defaults = [150800, 200200, 105900, 98300, 98300, 104000, 570, 570, 2800, 13000, 39900, 65000, 9000];
 
-    window.onload = () => {
-        loadSettingsUI();
-        const savedData = localStorage.getItem('alu_draft_v22');
-        if (savedData && JSON.parse(savedData).length > 0) {
-            const data = JSON.parse(savedData);
-            data.forEach(d => addWindow(d.h, d.w, d.q));
-        } else {
-            addWindow();
-        }
+    const windowIcons = {
+        '2L': `<svg viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" fill="none" stroke="white" stroke-width="2.5"/><line x1="20" y1="2" x2="20" y2="38" stroke="white" stroke-width="2.5"/></svg>`,
+        '3L': `<svg viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" fill="none" stroke="white" stroke-width="2.5"/><line x1="14" y1="2" x2="14" y2="38" stroke="white" stroke-width="2.5"/><line x1="26" y1="2" x2="26" y2="38" stroke="white" stroke-width="2.5"/></svg>`,
+        '4L': `<svg viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" fill="none" stroke="white" stroke-width="2.5"/><line x1="11" y1="2" x2="11" y2="38" stroke="white" stroke-width="2.5"/><line x1="20" y1="2" x2="20" y2="38" stroke="white" stroke-width="2.5"/><line x1="29" y1="2" x2="29" y2="38" stroke="white" stroke-width="2.5"/></svg>`
     };
 
-    function showPage(id) { 
-        document.getElementById('mainPage').style.display = id === 'mainPage' ? 'block' : 'none'; 
-        document.getElementById('resultPage').style.display = id === 'resultPage' ? 'block' : 'none'; 
-        document.getElementById('settingPage').style.display = id === 'settingPage' ? 'block' : 'none'; 
-    }
+    window.onload = () => { loadSettingsUI(); addWindow(); };
 
-    function addWindow(h = '', w = '', q = '') {
+    function addWindow() {
         const container = document.getElementById('windowInputs');
         const div = document.createElement('div');
         div.className = 'input-row';
         div.innerHTML = `
-            <div><label>h(ft)</label><input type="number" class="h-in" value="${h}" step="any" oninput="saveDraft()"></div>
-            <div><label>w(ft)</label><input type="number" class="w-in" value="${w}" step="any" oninput="saveDraft()"></div>
-            <div><label>qty</label><input type="number" class="q-in" value="${q}" oninput="saveDraft()"></div>
-            <div class="del-btn" onclick="removeRow(this)">×</div>
+            <div><label>h</label><input type="number" class="h-in" placeholder=""></div>
+            <div><label>w</label><input type="number" class="w-in" placeholder=""></div>
+            <div><label>qty</label><input type="number" class="q-in" placeholder=""></div>
+            <div>
+                <label>type</label>
+                <div class="type-picker" onclick="toggleMenu(this)">
+                    <div class="selected-display">--</div><input type="hidden" class="t-in">
+                    <div class="type-menu">
+                        <div class="type-option" onclick="selectType(this, '2L')">${windowIcons['2L']}</div>
+                        <div class="type-option" onclick="selectType(this, '3L')">${windowIcons['3L']}</div>
+                        <div class="type-option" onclick="selectType(this, '4L')">${windowIcons['4L']}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="del-btn" onclick="removeRow(this)">x</div>
         `;
         container.appendChild(div);
-        saveDraft();
     }
 
-    function removeRow(btn) {
-        if (confirm("ဒီ window ကို ဖျက်မှာလား ဆရာ?")) {
-            btn.parentElement.remove();
-            saveDraft();
+    function toggleMenu(el) { el.querySelector('.type-menu').classList.toggle('show'); }
+    function selectType(opt, val) {
+        const picker = opt.closest('.type-picker');
+        picker.querySelector('.t-in').value = val;
+        picker.querySelector('.selected-display').innerHTML = windowIcons[val];
+    }
+    function removeRow(btn) { btn.parentElement.remove(); }
+    function showPage(id) { document.querySelectorAll('.container').forEach(p=>p.style.display='none'); document.getElementById(id).style.display='block'; }
+
+    function processBarLogic(totalFeet, barPrice) {
+        let bars = Math.floor(totalFeet / 20);
+        let rem = totalFeet % 20;
+        let remAmt = 0;
+        let remText = "";
+        if (rem > 0) {
+            if (rem > 10) bars += 1;
+            else if (rem > 6.5) bars += 0.5;
+            else if (rem > 5) { remAmt = barPrice/3; remText = rem.toFixed(1)+"'"; }
+            else if (rem > 4) { remAmt = barPrice/4; remText = rem.toFixed(1)+"'"; }
+            else if (rem > 3) { remAmt = barPrice/5; remText = rem.toFixed(1)+"'"; }
+            else if (rem > 2.5) { remAmt = barPrice/6; remText = rem.toFixed(1)+"'"; }
+            else if (rem > 2) { remAmt = barPrice/8; remText = rem.toFixed(1)+"'"; }
+            else if (rem > 1.5) { remAmt = barPrice/10; remText = rem.toFixed(1)+"'"; }
+            else if (rem > 1) { remAmt = barPrice/13; remText = rem.toFixed(1)+"'"; }
+            else { remAmt = barPrice/20; remText = rem.toFixed(1)+"'"; }
         }
+        let qtyStr = bars > 0 ? (bars % 1 === 0 ? bars : bars.toFixed(1)) + " bar" : "";
+        if (remText !== "") qtyStr += (qtyStr !== "" ? " + " : "") + remText;
+        return { text: qtyStr || "0", amt: (bars * barPrice) + remAmt };
     }
 
-    function clearAll() {
-        if (confirm("အကုန်လုံးကို ဖျက်မှာလား ဆရာ?")) {
-            document.getElementById('windowInputs').innerHTML = '';
-            localStorage.removeItem('alu_draft_v22');
-            addWindow();
-        }
-    }
-
-    function saveDraft() {
-        const hs = document.querySelectorAll('.h-in'), ws = document.querySelectorAll('.w-in'), qs = document.querySelectorAll('.q-in');
-        let draft = [];
-        hs.forEach((h, i) => { 
-            if(h.value || ws[i].value || qs[i].value) {
-                draft.push({ h: h.value, w: ws[i].value, q: qs[i].value }); 
-            }
-        });
-        localStorage.setItem('alu_draft_v22', JSON.stringify(draft));
-    }
-
-    function applyPRRule(used, up) {
-        if (used > 10) return up; if (used > 6.5) return up * 0.5; if (used > 5) return up/3;
-        if (used > 4) return up/4; if (used > 3) return up/5; if (used > 2.5) return up/6;
-        if (used > 2) return up/8; if (used > 1.5) return up/10; if (used > 1) return up/13;
-        return up/20;
-    }
-
-    function getOpticutterCost(sizes, unitPrice) {
-        if (!sizes.length) return { amt: 0, qStr: "0" };
-        sizes.sort((a, b) => b - a);
-        let bins = [];
-        sizes.forEach(s => {
-            let placed = false;
-            for (let i = 0; i < bins.length; i++) { if (bins[i] >= s) { bins[i] -= s; placed = true; break; } }
-            if (!placed) bins.push(20 - s);
-        });
-        let fullBars = bins.length - 1;
-        let lastUsed = 20 - bins[bins.length - 1];
-        let p = applyPRRule(lastUsed, unitPrice);
-        let totalAmt = (fullBars * unitPrice) + p;
-        let qtyStr = lastUsed > 10 ? (fullBars + 1) + " bar" : (lastUsed > 6.5 ? (fullBars + 0.5) + " bar" : (fullBars > 0 ? fullBars + " bar + " : "") + lastUsed.toFixed(1) + "'");
-        return { amt: Math.ceil(totalAmt/100)*100, qStr: qtyStr };
-    }
-
-    async function calculate() {
-        saveDraft();
-        const hs = document.querySelectorAll('.h-in'), ws = document.querySelectorAll('.w-in'), qs = document.querySelectorAll('.q-in');
+    function calculate() {
+        const rows = document.querySelectorAll('.input-row');
         let data = [];
-        hs.forEach((h, i) => { if(h.value && ws[i].value && qs[i].value) data.push({ h: parseFloat(h.value), w: parseFloat(ws[i].value), q: parseInt(qs[i].value) }); });
-        if(!data.length) return alert("data အရင်ရိုက်ပါ ဆရာ");
-
-        // Show Loader
-        document.getElementById('loader').style.display = 'block';
+        rows.forEach(row => {
+            const h = row.querySelector('.h-in').value, w = row.querySelector('.w-in').value, q = row.querySelector('.q-in').value, t = row.querySelector('.t-in').value;
+            if(h && w && q && t) data.push({ h: parseFloat(h), w: parseFloat(w), q: parseInt(q), t });
+        });
+        if(!data.length) return alert("fill all boxes!");
         
-        // Wait for 1 second
-        await new Promise(r => setTimeout(r, 1000));
-        
-        document.getElementById('loader').style.display = 'none';
-
         const p = JSON.parse(localStorage.getItem('alu_v22_prices') || '{}');
         const getP = (i) => parseFloat(p['v'+i] || defaults[i-1]);
 
-        let allSizes = { top: [], btm: [], side: [], lock: [], hook: [], wheel: [], glass: [] };
-        let totalSqft = 0, weatherAmt = 0, topCaps = 0, btmCaps = 0, wheels = 0, locks = 0;
-
+        let sum = { top:0, btm:0, side:0, lock:0, hook:0, wheelF:0, caps:0, wheels:0, locks:0, weatherFt:0, glassSht:0, totalSqft:0 };
         data.forEach(d => {
-            totalSqft += d.h * d.w * d.q;
-            topCaps += d.q * 4; btmCaps += d.q * 4; 
-            wheels += d.q * 4; locks += d.q * 2;
-            weatherAmt += (d.h * d.q * 4) / 300;
-            for(let i=0; i<d.q; i++) {
-                allSizes.top.push(d.w); allSizes.btm.push(d.w);
-                allSizes.side.push(d.h, d.h); allSizes.lock.push(d.h, d.h);
-                allSizes.hook.push(d.h, d.h); allSizes.wheel.push(d.w/2, d.w/2, d.w/2, d.w/2);
-                allSizes.glass.push(d.h * (d.w/2), d.h * (d.w/2));
-            }
+            sum.totalSqft += d.h * d.w * d.q;
+            let leave = parseInt(d.t[0]);
+            let wPart = d.w / leave;
+            sum.top += d.w * d.q; sum.btm += d.w * d.q; sum.side += (d.h * 2) * d.q;
+            
+            // Logic for Lock Frames
+            let currentLockTotal = (d.h * (d.t === '4L' ? 4 : 2)) * d.q;
+            sum.lock += currentLockTotal;
+            sum.hook += (d.h * (d.t === '3L' ? 4 : (d.t === '4L' ? 4 : 2))) * d.q;
+            sum.wheelF += (wPart * leave * 2) * d.q;
+            sum.caps += (leave * 2) * d.q; sum.wheels += (leave * 2) * d.q;
+            sum.locks += (d.t === '4L' ? 3 : 2) * d.q;
+            sum.glassSht += (d.h * wPart * leave / 24) * d.q;
         });
 
-        let gBins = getOpticutterBins(allSizes.glass, 24);
-        let gAmt = (gBins.length - 1) * getP(12) + ((24 - gBins[gBins.length-1])/24 > 0.5 ? getP(12) : getP(12)*0.5);
-        let gQtyStr = (gBins.length - 1 + ((24 - gBins[gBins.length-1])/24 > 0.5 ? 1 : 0.5)) + " sht";
+        // Specific Weatherstrip Logic from User
+        // Step 1: Calculate total Lock bars needed
+        let lockRes = processBarLogic(sum.lock, getP(4));
+        let lockBarsCount = lockRes.text.includes("bar") ? parseFloat(lockRes.text.split(" ")[0]) : 0;
+        
+        // Step 2: Convert to feet (x20) and double it (x2)
+        let wstripTotalFeet = (lockBarsCount * 20) * 2;
+        
+        // Step 3: Round up to next 50' interval
+        let finalWstripFeet = Math.ceil(wstripTotalFeet / 50) * 50;
+        if(finalWstripFeet === 0 && lockBarsCount > 0) finalWstripFeet = 50;
 
-        let rows = [
-            { n: "top frame", ...getOpticutterCost(allSizes.top, getP(1)), pr: getP(1) },
-            { n: "btm frame", ...getOpticutterCost(allSizes.btm, getP(2)), pr: getP(2) },
-            { n: "side frame", ...getOpticutterCost(allSizes.side, getP(3)), pr: getP(3) },
-            { n: "lock frame", ...getOpticutterCost(allSizes.lock, getP(4)), pr: getP(4) },
-            { n: "hook frame", ...getOpticutterCost(allSizes.hook, getP(5)), pr: getP(5) },
-            { n: "wheel frame", ...getOpticutterCost(allSizes.wheel, getP(6)), pr: getP(6) },
-            { n: "top cap", qStr: topCaps, amt: topCaps * getP(7), pr: getP(7) },
-            { n: "btm cap", qStr: btmCaps, amt: btmCaps * getP(8), pr: getP(8) },
-            { n: "wheel", qStr: wheels, amt: wheels * getP(9), pr: getP(9) },
-            { n: "hook lock", qStr: locks, amt: locks * getP(10), pr: getP(10) },
-            { n: "weatherstrip", qStr: Math.ceil(weatherAmt) + " roll", amt: Math.ceil(weatherAmt) * getP(11), pr: getP(11) },
-            { n: "glass", qStr: gQtyStr, amt: Math.ceil(gAmt/100)*100, pr: getP(12) },
-            { n: "sqft labor", qStr: totalSqft.toFixed(1), amt: totalSqft * getP(13), pr: getP(13) }
+        let htm = `<div class="glass-card"><table><thead><tr><th>item</th><th class="num-cell">qty</th><th class="num-cell">price</th><th class="num-cell">amount</th></tr></thead><tbody>`;
+        let grandTotal = 0;
+
+        const alum = [
+            { n: "top frame", ft: sum.top, p: getP(1) }, { n: "btm frame", ft: sum.btm, p: getP(2) },
+            { n: "side frame", ft: sum.side, p: getP(3) }, { n: "lock frame", ft: sum.lock, p: getP(4) },
+            { n: "hook frame", ft: sum.hook, p: getP(5) }, { n: "wheel frame", ft: sum.wheelF, p: getP(6) }
         ];
-
-        let total = Math.ceil(rows.reduce((s, r) => s + r.amt, 0)/100)*100;
-        
-        let htm = `<div class="glass-card"><table><thead><tr><th>item</th><th>qty</th><th>price</th><th>amt</th></tr></thead><tbody>`;
-        
-        rows.forEach((r, idx) => {
-            htm += `<tr class="type-row" style="animation-delay: ${idx * 0.1}s">
-                <td>${r.n}</td><td>${r.qStr}</td><td>${r.pr.toLocaleString()}</td><td>${r.amt.toLocaleString()}</td>
-            </tr>`;
+        alum.forEach(i => {
+            let res = processBarLogic(i.ft, i.p);
+            htm += `<tr><td>${i.n}</td><td class="num-cell">${res.text}</td><td class="num-cell">${i.p.toLocaleString()}</td><td class="num-cell">${Math.ceil(res.amt).toLocaleString()}</td></tr>`;
+            grandTotal += res.amt;
         });
 
-        htm += `<tr class="total-row type-row" style="animation-delay: ${rows.length * 0.1}s"><td colspan="3" align="right">total</td><td>${total.toLocaleString()}</td></tr>`;
-        htm += `<tr class="sqft-row type-row" style="animation-delay: ${(rows.length + 1) * 0.1}s"><td colspan="3" align="right">avg 1sqft</td><td>${Math.ceil((total/totalSqft)/100)*100}</td></tr></tbody></table></div>`;
-        
+        const acc = [
+            { n: "top cap", q: sum.caps + " pc", a: sum.caps * getP(7), p: getP(7) },
+            { n: "btm cap", q: sum.caps + " pc", a: sum.caps * getP(8), p: getP(8) },
+            { n: "wheel", q: sum.wheels + " pc", a: sum.wheels * getP(9), p: getP(9) },
+            { n: "hook lock", q: sum.locks + " pc", a: sum.locks * getP(10), p: getP(10) },
+            { n: "weatherstrip", q: finalWstripFeet + "'", a: (finalWstripFeet/300) * getP(11), p: getP(11) },
+            { n: "glass", q: finalGlass = (sum.glassSht % 1 <= 0.5 && sum.glassSht % 1 > 0 ? Math.floor(sum.glassSht) + 0.5 : Math.ceil(sum.glassSht)) + " sht", a: parseFloat(finalGlass) * getP(12), p: getP(12) },
+            { n: "labor", q: sum.totalSqft.toFixed(1) + " sq", a: sum.totalSqft * getP(13), p: getP(13) }
+        ];
+        acc.forEach(i => {
+            htm += `<tr><td>${i.n}</td><td class="num-cell">${i.q}</td><td class="num-cell">${i.p.toLocaleString()}</td><td class="num-cell">${Math.ceil(i.a).toLocaleString()}</td></tr>`;
+            grandTotal += i.a;
+        });
+
+        htm += `<tr class="total-row"><td>total</td><td colspan="3" class="num-cell">${Math.ceil(grandTotal).toLocaleString()}</td></tr>`;
+        htm += `<tr><td style="color:var(--accent)">avg/sqft</td><td colspan="3" class="num-cell" style="color:var(--accent)">${Math.ceil(grandTotal/sum.totalSqft).toLocaleString()}</td></tr></tbody></table></div>`;
         document.getElementById('resultArea').innerHTML = htm;
         showPage('resultPage');
-    }
-
-    function getOpticutterBins(items, binSize) {
-        let bins = []; items.sort((a,b)=>b-a);
-        items.forEach(item => {
-            let placed = false;
-            for (let i=0; i<bins.length; i++) { if (bins[i] >= item) { bins[i] -= item; placed = true; break; } }
-            if (!placed) bins.push(binSize - item);
-        });
-        return bins;
-    }
-
-    function exportExcel() {
-        let table = document.querySelector("table");
-        let csv = Array.from(table.rows).map(row => Array.from(row.cells).map(c => c.innerText.replace(/,/g, "")).join(",")).join("\n");
-        let blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-        let link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.download = "estimate_v22.csv";
-        link.click();
     }
 
     function loadSettingsUI() {
@@ -264,11 +212,12 @@
         let s = localStorage.getItem('alu_v22_prices');
         if(s) { let p = JSON.parse(s); labels.forEach((_, i) => { document.getElementById('p'+(i+1)).value = p['v'+(i+1)]; }); }
     }
-
     function savePrices() {
         let p = {}; labels.forEach((_, i) => { p['v'+(i+1)] = document.getElementById('p'+(i+1)).value; });
         localStorage.setItem('alu_v22_prices', JSON.stringify(p)); showPage('mainPage');
     }
+    function clearAll() { if(confirm("clear all?")) { document.getElementById('windowInputs').innerHTML=''; addWindow(); } }
 </script>
 </body>
-</html>
+    </html>
+        
